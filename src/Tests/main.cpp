@@ -3,6 +3,7 @@
 #include <boost/test/included/unit_test.hpp>
 #include "../Lib/Constructions/Elementary.hpp"
 #include "../Lib/Constructions/Adders.hpp"
+#include "../Lib/Constructions/ArithmeticBlock.hpp"
 
 
 BOOST_AUTO_TEST_CASE(or_test)
@@ -57,5 +58,19 @@ BOOST_AUTO_TEST_CASE(half_adder_test)
 
 	element.Calculate(false, false);
 	BOOST_TEST(!element.result);
+	BOOST_TEST(!element.overflow_bit);
+}
+
+//constexpr std::bitset<8> c{ 0b00001010 };
+BOOST_AUTO_TEST_CASE(add_test)
+{
+	ArithmeticBlock<8> element;
+
+	element.Calculate({ 0b00001000 }, { 0b00000010 });
+	BOOST_TEST(element.result.bitset == std::bitset<8>{ 0b00001010 });
+	BOOST_TEST(!element.overflow_bit);
+
+	element.Calculate({ 0b00000010 }, { 0b00000010 });
+	BOOST_TEST(element.result.bitset == std::bitset<8>{ 0b00000100 });
 	BOOST_TEST(!element.overflow_bit);
 }
